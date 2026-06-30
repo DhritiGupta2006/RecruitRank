@@ -36,6 +36,8 @@ import os
 import time
 from typing import Dict, List, Optional, Tuple
 
+from pipeline.stage3_embeddings import load_career_texts  # canonical definition in Stage 3
+
 import numpy as np
 import pandas as pd
 
@@ -105,25 +107,8 @@ def load_cross_encoder(model_cache_dir: Optional[str] = None):
 # ---------------------------------------------------------------------------
 # Artifact loaders
 # ---------------------------------------------------------------------------
-
-def load_career_texts(artifacts_dir: str = "artifacts") -> Dict[str, str]:
-    """
-    Load the pre-computed career_texts.json artifact saved by Stage 3.
-
-    Raises:
-        FileNotFoundError: With exact fix instructions if the file is missing.
-    """
-    texts_path = os.path.join(artifacts_dir, "career_texts.json")
-    if not os.path.exists(texts_path):
-        raise FileNotFoundError(
-            f"Stage 7: Missing artifact '{texts_path}'.\n"
-            "career_texts.json is produced by Stage 3 (stage3_embeddings.py) "
-            "during precompute.py. Cross-encoders need raw text strings, not "
-            "embedding vectors — this file maps candidate_id → career_text.\n"
-            "Fix: run precompute.py to regenerate all artifacts."
-        )
-    with open(texts_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+# Note: load_career_texts is imported from pipeline.stage3_embeddings above.
+# Stage 3 is the canonical owner of career_texts.json.
 
 
 def load_jd_text(artifacts_dir: str = "artifacts") -> str:
